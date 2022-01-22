@@ -93,3 +93,17 @@ FROM (SELECT activity,
      GROUP BY 1) t
 WHERE cnt_dec != 1 AND cnt_asc != 1;
 
+Solution 3: (CTE)
+
+WITH temp as
+(
+select f.activity, count(f.name) as cnt
+from Friends f right join Activities a on f.activity = a.name
+group by a.name
+)
+
+select activity
+from temp
+where cnt <> (select max(cnt) from temp)
+and cnt <> (select min(cnt) from temp);
+
